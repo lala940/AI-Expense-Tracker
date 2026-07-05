@@ -1,10 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta http-equiv="refresh" content="0; url=client/index.html">
-    <title>Redirecting...</title>
+  <meta charset="UTF-8">
+  <title>Login - AI Expense Tracker</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
-    Redirecting...
+<body class="bg-slate-50 flex items-center justify-center h-screen">
+  <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-100">
+    <h2 class="text-3xl font-extrabold text-indigo-600 mb-2">AI Expence tracker</h2>
+    <p class="text-slate-500 mb-6">Track your expenses smartly.</p>
+    
+    <form id="loginForm" class="space-y-4">
+      <div>
+        <label class="block text-sm font-semibold mb-1 text-slate-700">Email Address</label>
+        <input type="email" id="email" required class="w-full p-3 border border-slate-200 rounded-xl focus:outline-indigo-500">
+      </div>
+      <div>
+        <label class="block text-sm font-semibold mb-1 text-slate-700">Password</label>
+        <input type="password" id="password" required class="w-full p-3 border border-slate-200 rounded-xl focus:outline-indigo-500">
+      </div>
+      <button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold p-3 rounded-xl transition">Sign In</button>
+    </form>
+    <p class="mt-4 text-center text-sm text-slate-600">New here? <a href="signup.html" class="text-indigo-600 font-medium hover:underline">Create an account</a></p>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const res = await fetch('http://localhost:9000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.value, password: password.value })
+      });
+      const data = await res.json();
+      if(res.ok) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('email', data.email);
+        window.location.href = 'dashboard.html';
+      } else { alert(data.error); }
+    };
+  </script>
 </body>
 </html>
